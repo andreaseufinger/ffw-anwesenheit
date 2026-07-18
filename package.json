@@ -1,0 +1,16 @@
+{
+  "name": "anwesenheit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Anwesenheit Ausbildungsabend — mobile Web-App auf Cloudflare Pages + D1",
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "d1:create": "wrangler d1 create anwesenheit",
+    "d1:schema:local": "wrangler d1 execute anwesenheit --local --file=./schema.sql",
+    "d1:schema:remote": "wrangler d1 execute anwesenheit --remote --file=./schema.sql",
+    "deploy": "wrangler pages deploy public"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
