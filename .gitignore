@@ -1,0 +1,12 @@
+node_modules/
+.wrangler/
+.dev.vars
+.DS_Store
+*.log
+.env
+.env.local
+.claude/
+
+# Anweisungsdateien enthalten Geheimnisse (Homey-Webhook-URL) und gehören
+# nicht ins Repository.
+anweisung_*.md
