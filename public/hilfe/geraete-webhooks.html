@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="auto">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#171412" />
+  <script src="/theme-frueh.js"></script>
+  <link rel="stylesheet" href="/einsatztafel.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/hilfe/hilfe.css" />
+  <title>Geräte, Fahrzeuge und Webhooks · Hilfe Anwesenheit</title>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <a class="icon-btn" href="/hilfe/" aria-label="Zurück zur Übersicht" title="Zurück zur Übersicht">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+      </a>
+      <span class="plate-mark" aria-hidden="true">AW</span>
+      <h1>Hilfe</h1>
+    </div>
+  </header>
+  <main class="hilfe">
+<h1 id="geraete-fahrzeuge-und-webhooks">Geräte, Fahrzeuge und Webhooks</h1>
+<p>Diese Einstellungen gibt es im <strong>Einsatzprotokoll</strong> und sind für den <strong>Admin</strong>.</p>
+<h2 id="fahrzeuge">Fahrzeuge</h2>
+<p>Unter „Fahrzeuge verwalten“ legt ihr jedes Fahrzeug an, das in einem Einsatz vorkommen kann:</p>
+<ul>
+<li><strong>Kennung</strong> (zum Beispiel 3/43) und <strong>Name</strong> (zum Beispiel LF 10)</li>
+<li><strong>Positionen</strong>, durch Komma getrennt. Das sind die Plätze der Besatzung, etwa MA, GF, AF, AM.</li>
+<li><strong>Sortierung</strong> in der Auswahl</li>
+</ul>
+<p>Erst danach stehen die Fahrzeuge im Einsatz zur Auswahl.</p>
+<h2 id="nachbar-ffen">Nachbar-FFen</h2>
+<p>Unter „Nachbar-FFen verwalten“ pflegt ihr die Feuerwehren, die im Einsatz unter „FFen vor Ort“ angehakt werden können.</p>
+<h2 id="geraete-fahrzeug-tablets">Geräte (Fahrzeug-Tablets)</h2>
+<p>Ein <strong>Gerät</strong> ist ein festes Tablet im Fahrzeug. Es meldet sich ohne Passwort selbst an. Erfasste Daten laufen dabei auf die Kennung des Geräts, nicht auf eine Person.</p>
+<p><img src="bilder/geraete.png" alt="Liste der Geräte mit Einrichten, Sperren und Löschen" loading="lazy"></p>
+<p>So richtet ihr ein Gerät ein:</p>
+<ol>
+<li>Im Menü „Geräte verwalten“ öffnen und „+ Neues Gerät“ antippen.</li>
+<li>Namen eintragen und speichern. Es erscheint ein <strong>QR-Code</strong>.</li>
+<li>Den Code mit der Kamera des Tablets scannen. Er führt auf die Seite <strong>/einsatzprotokoll/enroll</strong> eurer App und gilt <strong>15 Minuten</strong> und nur <strong>ein einziges Mal</strong>. Klappt der Scan nicht, öffnet ihr die darunter angezeigte Adresse am Tablet. „Adresse kopieren“ hilft dabei.</li>
+<li>Am Tablet die App zum Startbildschirm hinzufügen (siehe <a href="app-installieren.html">App installieren und anmelden</a>).</li>
+</ol>
+<p>Ein Gerät lässt sich später sperren oder neu einrichten, wenn das Tablet ersetzt wird.</p>
+<h2 id="webhooks">Webhooks</h2>
+<p>Webhooks melden einen neuen Einsatz an andere Systeme weiter, etwa an die Hausautomation für das Licht im Treppenhaus. Sie werden nach dem Anlegen eines Einsatzes <strong>der Reihe nach</strong> aufgerufen, damit die Alarmierung selbst nicht wartet. Ein nicht erreichbares Ziel wird übersprungen.</p>
+<p>Pro Webhook gibt es <strong>Name</strong>, <strong>URL</strong>, <strong>Reihenfolge</strong> und <strong>Aktiv</strong>. In der URL könnt ihr Platzhalter verwenden: <code>{keyword}</code>, <code>{unit}</code>, <code>{id}</code>, <code>{datum}</code>, <code>{uhrzeit}</code>. Ohne Platzhalter wird <code>?tag=&lt;Stichwort&gt;</code> angehängt.</p>
+<p>Der oberste Eintrag ist das Ziel, das die Wehrführung fest in Cloudflare hinterlegt hat. Es wird als Erstes aufgerufen und lässt sich hier nur prüfen, nicht bearbeiten, damit die Adresse nicht sichtbar wird.</p>
+
+  </main>
+</body>
+</html>

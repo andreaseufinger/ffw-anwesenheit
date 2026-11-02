@@ -1,0 +1,20 @@
+# Sicherheits-Header für alle Antworten (Review-Befund SEC5).
+#
+# Content-Security-Policy:
+# - Skripte nur von hier und den drei CDNs der nachgeladenen Bibliotheken
+#   (jsPDF/AutoTable: cdnjs, SheetJS: cdn.sheetjs.com, Barcode-Detektor:
+#   jsDelivr), jeweils zusätzlich mit Prüfsumme (SRI) im Code. Keine
+#   eingebetteten Skripte.
+# - wasm-unsafe-eval und connect-src fastly.jsdelivr.net: das
+#   WebAssembly-Modul der Barcode-Erkennung (Kleidung).
+# - style-src 'unsafe-inline': Balkenbreiten u. ä. werden als style-Attribut
+#   gesetzt. Schriften und Bilder als data:-URI (Design-System).
+# Neue Bibliothek oder neue Quelle: hier eintragen, sonst blockiert der
+# Browser sie still. Prüfen mit dem Skill "sichtpruefung".
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://cdn.sheetjs.com https://cdn.jsdelivr.net 'wasm-unsafe-eval'; connect-src 'self' https://cdn.jsdelivr.net https://fastly.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(self), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin

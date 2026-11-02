@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="auto">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Einsatz" />
+  <meta name="theme-color" content="#171412" id="meta-theme" />
+  <!-- Darstellung vor dem ersten Zeichnen setzen (blockierend, klein) -->
+  <script src="/einsatzprotokoll/theme-frueh.js"></script>
+  <link rel="manifest" href="/einsatzprotokoll/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/einsatzprotokoll/icon-180.png" />
+  <!-- Design-System "Einsatztafel" zuerst, die App-Regeln danach. -->
+  <link rel="stylesheet" href="/einsatztafel.css" />
+  <link rel="stylesheet" href="/einsatzprotokoll/style.css" />
+  <title>Einsatzprotokoll FF Musterwehr</title>
+</head>
+<body>
+
+  <!-- Modul ausgeschaltet (module.js: einsatzprotokoll: false) -->
+  <div id="modul-aus" class="login-screen hidden">
+    <div class="login-card">
+      <h1><span class="plate-mark">EP</span> Einsatzprotokoll</h1>
+      <p class="modul-aus-text">Das Einsatzprotokoll ist in dieser Installation nicht eingeschaltet.</p>
+      <a class="btn-primary" href="/">Zur Startseite</a>
+    </div>
+  </div>
+
+  <!-- Login -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-card">
+      <h1><span class="plate-mark">EP</span> Einsatzprotokoll</h1>
+      <form id="login-form" autocomplete="on">
+        <div class="field">
+          <label for="login-user">Benutzername</label>
+          <input type="text" id="login-user" name="username" autocapitalize="none" autocomplete="username" required />
+        </div>
+        <div class="field">
+          <label for="login-pass">Passwort</label>
+          <input type="password" id="login-pass" name="password" autocomplete="current-password" required />
+        </div>
+        <div id="login-error" class="login-error hidden"></div>
+        <button type="submit" id="login-submit" class="btn-primary">Anmelden</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- App -->
+  <div id="app" class="hidden">
+    <header class="app-header">
+      <div class="header-inner">
+        <button class="icon-btn" id="btn-menu" aria-label="Menü" title="Menü">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <span class="plate-mark" aria-hidden="true">EP</span>
+        <h1 id="header-title">Einsatzprotokoll</h1>
+        <!-- Nur auf Geräte-Tablets sichtbar: macht klar, dass Eingaben auf das
+             Fahrzeug laufen und nicht auf eine Person. -->
+        <span id="device-badge" class="device-badge"></span>
+        <button class="icon-btn" id="btn-new" aria-label="Neuer Einsatz" title="Neuer Einsatz">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <!-- View: Erfassung -->
+      <section id="view-edit" class="view">
+        <div id="live-banner" class="live-banner hidden"></div>
+        <form id="form-einsatz" class="ep-form" autocomplete="off">
+          <!-- Lage: auf dem iPad quer links und haftend -->
+          <div class="card-form ep-lage">
+          <h2 class="section-h">Alarmierung</h2>
+          <div class="row-2">
+            <div class="field">
+              <label for="alarm-datum">Datum</label>
+              <input type="date" id="alarm-datum" required />
+            </div>
+            <div class="field">
+              <label for="alarm-uhrzeit">Uhrzeit</label>
+              <input type="time" id="alarm-uhrzeit" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="alarmierte-einheit">Alarmierte Einheit</label>
+            <input type="text" id="alarmierte-einheit" placeholder="z. B. FF Musterwehr / 3-43" />
+          </div>
+          <div class="field">
+            <label for="einsatzort">Einsatzort</label>
+            <div class="combo">
+              <input type="text" id="einsatzort" autocomplete="off" placeholder="z. B. Hauptstraße 12" />
+              <button type="button" class="combo-toggle" id="eo-toggle" aria-label="Liste öffnen" tabindex="-1">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <ul class="combo-list hidden" id="eo-list" role="listbox"></ul>
+            </div>
+          </div>
+          <div class="field">
+            <label for="einsatzgrund">Einsatzgrund</label>
+            <input type="text" id="einsatzgrund" placeholder="z. B. F BMA / VU PKW" />
+          </div>
+
+          <div class="field">
+            <label for="einsatzleiter">Einsatzleiter</label>
+            <div id="el-wahl"></div>
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label for="km-es">Km bis Einsatzstelle</label>
+              <input type="number" id="km-es" step="0.1" min="0" />
+            </div>
+            <div class="field">
+              <label for="km-gesamt">Gesamt Km</label>
+              <input type="number" id="km-gesamt" step="0.1" min="0" />
+            </div>
+          </div>
+
+          <h2 class="section-h">FFen vor Ort</h2>
+          <ul id="ffen-checklist" class="tag-checklist"></ul>
+
+          <div class="field">
+            <label for="erste-ff">Welche FF zuerst an der Einsatzstelle?</label>
+            <select id="erste-ff"><option value="">— keine —</option></select>
+          </div>
+
+          <h2 class="section-h">Notizen</h2>
+          <div class="field">
+            <textarea id="notizen" rows="3" aria-label="Notizen" placeholder="z. B. Fehlauslösung durch Wartungsfirma"></textarea>
+          </div>
+          </div>
+
+          <!-- Kräfte: Fahrzeuge mit Besatzung, Atemschutz, Verunfallte -->
+          <div class="ep-kraefte">
+          <h2 class="section-h">Eingesetzte Fahrzeuge</h2>
+          <!-- Stärke Verbandsführer/Unterführer/Mannschaft/Gesamt, Tippen springt zur Karte -->
+          <div id="staerke-leiste" class="staerke-leiste hidden" aria-label="Stärke"></div>
+          <ul id="fahrzeuge-list" class="fahrzeuge-list"></ul>
+
+          <h2 class="section-h">Atemschutz (PA)</h2>
+          <ul id="pa-list" class="pa-list"></ul>
+          <button type="button" id="btn-add-pa" class="chip">+ PA-Träger</button>
+
+          <h2 class="section-h">Verunfallte (KFZ-Kennzeichen)</h2>
+          <ul id="ver-list" class="ver-list"></ul>
+          <button type="button" id="btn-add-ver" class="chip">+ Kennzeichen</button>
+
+          </div>
+        </form>
+      </section>
+
+      <!-- View: Verlauf -->
+      <section id="view-history" class="view hidden">
+        <ul id="history-list" class="history-list"></ul>
+        <div id="history-empty" class="empty hidden">Noch keine Einsätze gespeichert.</div>
+      </section>
+
+      <!-- View: Fahrzeuge (Admin) -->
+      <section id="view-fahrzeuge" class="view hidden">
+        <button id="btn-fz-new" class="btn-primary" style="margin-bottom:14px">+ Neues Fahrzeug</button>
+        <ul id="fz-stamm-list" class="users-list"></ul>
+      </section>
+
+      <!-- View: FFen (Admin) -->
+      <section id="view-ffen" class="view hidden">
+        <button id="btn-ff-new" class="btn-primary" style="margin-bottom:14px">+ Neue FF</button>
+        <ul id="ff-stamm-list" class="users-list"></ul>
+      </section>
+
+      <!-- View: Benutzer (Admin) -->
+      <section id="view-users" class="view hidden">
+        <button id="btn-user-new" class="btn-primary" style="margin-bottom:14px">+ Neuer Benutzer</button>
+        <ul id="users-list" class="users-list"></ul>
+      </section>
+
+      <!-- View: ausgehende Webhooks (Fan-out nach dem Alarm) -->
+      <section id="view-webhooks" class="view hidden">
+        <p class="hint">
+          Diese Ziele werden nach dem Anlegen eines Einsatzes <strong>der Reihe
+          nach</strong> aufgerufen — nachgelagert, damit die Alarmierung selbst
+          nicht wartet. Ein nicht erreichbares Ziel wird übersprungen.
+          Platzhalter in der URL: <code>{keyword}</code>, <code>{unit}</code>,
+          <code>{id}</code>, <code>{datum}</code>, <code>{uhrzeit}</code>.
+          Ohne Platzhalter wird <code>?tag=&lt;Stichwort&gt;</code> angehängt.
+          Der oberste Eintrag ist das in Cloudflare hinterlegte Secret-Ziel —
+          es wird als Erstes aufgerufen und lässt sich hier nur prüfen, nicht
+          bearbeiten, damit die URL nicht sichtbar wird.
+        </p>
+        <button id="btn-webhook-new" class="btn-primary" style="margin-bottom:14px">+ Neuer Webhook</button>
+        <ul id="webhooks-list" class="users-list"></ul>
+      </section>
+
+      <!-- View: Geräte (LF10, GW) — melden sich ohne Passwort an -->
+      <section id="view-geraete" class="view hidden">
+        <p class="hint">
+          Geräte melden sich beim Öffnen der App automatisch an. Erfasste Daten
+          laufen auf die Kennung des Geräts, nicht auf eine Person.
+        </p>
+        <button id="btn-geraet-new" class="btn-primary" style="margin-bottom:14px">+ Neues Gerät</button>
+        <ul id="geraete-list" class="users-list"></ul>
+      </section>
+    </main>
+
+    <footer class="action-bar">
+      <div id="action-edit" class="action-row">
+        <button id="btn-back" class="btn-secondary btn-icon" aria-label="Verlauf" title="Verlauf">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
+        </button>
+        <button id="btn-print" class="btn-secondary btn-icon seeall-only hidden" aria-label="Drucken" title="Drucken">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V4h10v5M7 17H5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2M7 14h10v6H7z"/></svg>
+        </button>
+        <button id="btn-save" class="btn-primary btn-icon" aria-label="Speichern" title="Speichern">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l4 4v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8 4v5h7V4M8 20v-6h8v6"/></svg>
+        </button>
+        <button id="btn-abschliessen" class="btn-danger hidden">Abschließen</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Menu -->
+  <div id="menu-overlay" class="sheet-overlay hidden">
+    <div class="sheet">
+      <div class="sheet-user">
+        Angemeldet als <strong id="menu-username">—</strong>
+        <span id="menu-role" class="role-badge"></span>
+      </div>
+      <button class="sheet-item" data-action="edit">
+        <svg class="sheet-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6v3H9zM7 5.5H5v15h14v-15h-2"/><path d="M8.5 12h7M8.5 16h5"/></svg> Einsatz erfassen
+      </button>
+      <button class="sheet-item" data-action="history">
+        <svg class="sheet-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg> Vorherige Einsätze
+      </button>
+      <button class="sheet-item seeall-only" data-action="export">
+        <svg class="sheet-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 20h14"/></svg> Excel exportieren
+      </button>
+      <button class="sheet-item admin-only" data-action="fahrzeuge">
+        <svg class="sheet-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 16V8h11v8M14 11h4l3 3v2h-7M3 16h18"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg> Fahrzeuge verwalten
+      </button>
+      <button class="sheet-item admin-only" data-action="ffen">
+        <svg class="sheet-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M5 20V10M19 20V10M9 20v-6h6v6M2 10l10-6 10 6"/></svg> Nachbar-FFen verwalten
+      </button>
+      <button class="sheet-item admin-only" data-action="users">
+        <svg class="sheet-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 5.5a3 3 0 0 1 0 5.5M17.5 14.5A5.5 5.5 0 0 1 20.5 19"/></svg> Benutzer verwalten
+      </button>
+      <button class="sheet-item admin-only" data-action="geraete">
+        <svg class="sheet-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M10 18h4"/></svg> Geräte verwalten
+      </button>
+      <button class="sheet-item admin-only" data-action="webhooks">
+        <svg class="sheet-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg> Webhooks verwalten
+      </button>
+      <div class="setting-block sheet-theme">
+        <div class="setting-title">Darstellung</div>
+        <div class="setting-desc">Gilt nur für dieses Gerät. Hell ist bei starkem Sonnenlicht besser lesbar, Automatisch folgt der Einstellung des Geräts.</div>
+        <div class="seg" role="radiogroup" aria-label="Darstellung">
+          <label><input type="radio" name="theme" id="theme-dark" value="dark"><span>Dunkel</span></label>
+          <label><input type="radio" name="theme" id="theme-light" value="light"><span>Hell</span></label>
+          <label><input type="radio" name="theme" id="theme-auto" value="auto"><span>Automatisch</span></label>
+        </div>
+      </div>
+      <button class="sheet-item" data-action="hilfe">
+        <svg class="sheet-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 16.5v.5"/></svg> Hilfe
+      </button>
+      <button class="sheet-item sheet-logout" data-action="logout">
+        <svg class="sheet-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M16 8l4 4-4 4M20 12H10"/></svg> Abmelden
+      </button>
+    </div>
+  </div>
+
+  <!-- Webhook-Dialog -->
+  <dialog id="wh-dialog" class="dialog">
+    <form method="dialog">
+      <h3 id="wh-dialog-title">Neuer Webhook</h3>
+      <div class="field">
+        <label for="wh-name">Name</label>
+        <input type="text" id="wh-name" autocomplete="off" placeholder="z. B. Homey Treppenhauslicht" />
+      </div>
+      <div class="field">
+        <label for="wh-url">URL</label>
+        <input type="url" id="wh-url" autocomplete="off" placeholder="https://…/einsatz" />
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label for="wh-sort">Reihenfolge</label>
+          <input type="number" id="wh-sort" value="100" />
+        </div>
+        <div class="field">
+          <label for="wh-aktiv">Aktiv</label>
+          <select id="wh-aktiv"><option value="1">Ja</option><option value="0">Nein</option></select>
+        </div>
+      </div>
+      <div id="wh-error" class="login-error hidden"></div>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn-secondary" type="button" id="wh-cancel">Abbrechen</button>
+        <button value="ok" class="btn-primary" type="button" id="wh-save">Speichern</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Einrichtungs-Dialog: QR-Code zum Scannen mit dem Tablet -->
+  <dialog id="enroll-dialog" class="dialog">
+    <h3 id="enroll-dialog-title">Gerät einrichten</h3>
+    <p class="hint">
+      Diesen QR-Code mit der Kamera des Geräts scannen. Der Code gilt
+      <strong id="enroll-ttl">15</strong> Minuten und nur ein einziges Mal.
+    </p>
+    <div id="enroll-qr" class="enroll-qr"></div>
+    <p class="hint">Falls der Scan nicht klappt, diese Adresse am Gerät öffnen:</p>
+    <input type="text" id="enroll-link" class="enroll-link" readonly />
+    <p class="hint">
+      Danach am Gerät: Teilen&nbsp;→ „Zum Home-Bildschirm hinzufügen".
+    </p>
+    <div class="dialog-actions">
+      <button type="button" id="enroll-copy" class="btn-secondary">Adresse kopieren</button>
+      <button type="button" id="enroll-close" class="btn-primary">Fertig</button>
+    </div>
+  </dialog>
+
+  <!-- Fahrzeug-Stammdaten-Dialog -->
+  <dialog id="fz-dialog" class="dialog">
+    <form method="dialog">
+      <h3 id="fz-dialog-title">Neues Fahrzeug</h3>
+      <div class="field">
+        <label for="fz-kennung">Kennung (z. B. 3/43)</label>
+        <input type="text" id="fz-kennung" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="fz-name">Name (z. B. LF 10)</label>
+        <input type="text" id="fz-name" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="fz-positionen">Positionen (durch Komma)</label>
+        <input type="text" id="fz-positionen" placeholder="MA,GF,AF,AM,WF,WM,SF,SM,ME" />
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label for="fz-sort">Sortierung</label>
+          <input type="number" id="fz-sort" value="100" />
+        </div>
+        <div class="field">
+          <label for="fz-aktiv">Aktiv</label>
+          <select id="fz-aktiv"><option value="1">Ja</option><option value="0">Nein</option></select>
+        </div>
+      </div>
+      <div id="fz-error" class="login-error hidden"></div>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn-secondary" type="button" id="fz-cancel">Abbrechen</button>
+        <button value="ok" class="btn-primary" type="button" id="fz-save">Speichern</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- FF-Stammdaten-Dialog -->
+  <dialog id="ff-dialog" class="dialog">
+    <form method="dialog">
+      <h3 id="ff-dialog-title">Neue Nachbar-FF</h3>
+      <div class="field">
+        <label for="ff-kuerzel">Kürzel</label>
+        <input type="text" id="ff-kuerzel" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="ff-name">Name</label>
+        <input type="text" id="ff-name" autocomplete="off" />
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label for="ff-sort">Sortierung</label>
+          <input type="number" id="ff-sort" value="100" />
+        </div>
+        <div class="field">
+          <label for="ff-aktiv">Aktiv</label>
+          <select id="ff-aktiv"><option value="1">Ja</option><option value="0">Nein</option></select>
+        </div>
+      </div>
+      <div id="ff-error" class="login-error hidden"></div>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn-secondary" type="button" id="ff-cancel">Abbrechen</button>
+        <button value="ok" class="btn-primary" type="button" id="ff-save">Speichern</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Benutzer-Dialog -->
+  <dialog id="user-dialog" class="dialog">
+    <form method="dialog">
+      <h3 id="user-dialog-title">Neuer Benutzer</h3>
+      <div class="field">
+        <label for="user-username">Benutzername</label>
+        <input type="text" id="user-username" autocapitalize="none" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="user-password">Passwort</label>
+        <input type="password" id="user-password" autocomplete="new-password" />
+      </div>
+      <div class="field">
+        <label>Rollen in der Einsatzprotokoll-App</label>
+        <label class="check-row"><input type="checkbox" id="user-role-admin" /> <span>Admin</span></label>
+        <label class="check-row"><input type="checkbox" id="user-role-erfasser" /> <span>Erfasser</span></label>
+        <label class="check-row"><input type="checkbox" id="user-role-leser" /> <span>Leser (alle Einsätze lesen, ohne Bearbeiten)</span></label>
+      </div>
+      <div id="user-other-roles" class="hint hidden"></div>
+      <div id="user-error" class="login-error hidden"></div>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn-secondary" type="button" id="user-cancel">Abbrechen</button>
+        <button value="ok" class="btn-primary" type="button" id="user-save">Speichern</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Rückfrage und Hinweis im Stil der App (statt confirm/alert des Browsers) -->
+  <dialog id="frage-dialog" class="dialog frage-dialog">
+    <form method="dialog">
+      <h3 id="frage-titel"></h3>
+      <div id="frage-text" class="frage-text"></div>
+      <div class="dialog-actions">
+        <button value="nein" class="btn-secondary" id="frage-nein">Abbrechen</button>
+        <button value="ja" class="btn-danger" id="frage-ja">Löschen</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/einsatzprotokoll/theme.js"></script>
+  <script src="/module.js" defer></script>
+  <script src="/einsatzprotokoll/wehr.js" defer></script>
+  <script src="/einsatzprotokoll/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#171412" />
+  <!-- Einrichtung passiert nur auf Fahrzeug-Tablets: die starten in Dunkel. -->
+  <link rel="stylesheet" href="/einsatztafel.css" />
+  <link rel="stylesheet" href="/einsatzprotokoll/style.css" />
+  <title>Gerät einrichten — Einsatzprotokoll</title>
+</head>
+<body>
+  <div class="login-screen">
+    <div class="login-card">
+      <h1><span class="plate-mark">EP</span> Gerät einrichten</h1>
+      <p id="enroll-status">Einrichtung läuft …</p>
+      <div id="enroll-error" class="login-error hidden"></div>
+    </div>
+  </div>
+
+  <script src="/einsatzprotokoll/enroll.js"></script>
+</body>
+</html>

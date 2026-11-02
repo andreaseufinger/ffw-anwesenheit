@@ -1,0 +1,27 @@
+/* Bedienungsanleitung: nur Tokens aus dem Design-System Einsatztafel. */
+main.hilfe { max-width: 44rem; padding: var(--gap) var(--gap) 3rem; hyphens: auto; overflow-wrap: anywhere; }
+.hilfe h1 { font-family: var(--display); font-weight: 700; font-size: 1.8rem; letter-spacing: .06em; text-transform: uppercase; line-height: 1.15; margin: .4rem 0 1rem; }
+.hilfe h2 { font-family: var(--display); font-weight: 700; font-size: 1.3rem; letter-spacing: .08em; text-transform: uppercase; margin: 2rem 0 .6rem; }
+.hilfe h3 { font-weight: 700; margin: 1.4rem 0 .4rem; }
+.hilfe p, .hilfe ul, .hilfe ol { margin: 0 0 .9rem; }
+.hilfe ol, .hilfe ul { padding-left: 1.4rem; }
+.hilfe li { margin-bottom: .45rem; }
+.hilfe a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.hilfe strong { font-weight: 700; }
+.hilfe code { background: var(--card-2); border: 1px solid var(--line); border-radius: 3px; padding: 0 .3em; }
+.hilfe img { display: block; max-width: 100%; height: auto; margin: 1rem 0; border: 1px solid var(--line); border-radius: var(--radius); }
+.hilfe blockquote { margin: 1rem 0; padding: .8rem 1rem; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--red); border-radius: var(--radius); }
+.hilfe blockquote p:last-child { margin-bottom: 0; }
+.hilfe table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+.hilfe th, .hilfe td { border: 1px solid var(--line); padding: .5rem .6rem; text-align: left; vertical-align: top; }
+.hilfe-text { color: var(--muted); }
+.hilfe-liste { list-style: none; padding: 0 !important; display: grid; gap: .6rem; }
+.hilfe-liste li { margin: 0; }
+.hilfe-liste a { display: block; min-height: 44px; padding: .8rem 1rem; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; }
+.hilfe-liste a span { display: block; color: var(--muted); margin-top: .15rem; }
+.hilfe-liste a:active { background: var(--press); }
+@media (hover: hover) { .hilfe-liste a:hover { background: var(--press); } }
+a.icon-btn { text-decoration: none; }
+@media print { .app-header { display: none !important; } }
+.hilfe td:first-child, .hilfe th:first-child { hyphens: none; overflow-wrap: normal; }
+.hilfe img { width: auto; max-height: 44rem; }

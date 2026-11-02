@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="auto">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#171412" />
+  <script src="/theme-frueh.js"></script>
+  <link rel="stylesheet" href="/einsatztafel.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/hilfe/hilfe.css" />
+  <title>Atemschutz und Kleidung: Florix-Import · Hilfe Anwesenheit</title>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <a class="icon-btn" href="/hilfe/" aria-label="Zurück zur Übersicht" title="Zurück zur Übersicht">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+      </a>
+      <span class="plate-mark" aria-hidden="true">AW</span>
+      <h1>Hilfe</h1>
+    </div>
+  </header>
+  <main class="hilfe">
+<h1 id="atemschutz-und-kleidung-florix-import">Atemschutz und Kleidung: Florix-Import</h1>
+<p>Die Module <strong>Atemschutz</strong> und <strong>Kleidung</strong> übernehmen ihre Daten aus Florix. Dafür gibt es in beiden den Knopf <strong>Florix-Import</strong>. Das ist Sache des <strong>Atemschutz-Admins</strong> bzw. des <strong>Kleidung-Admins</strong>, auch der Admin darf es. Vor dem Einbuchen zeigt die App eine <strong>Liste aller Änderungen</strong>. Erst der Knopf „Änderungen übernehmen“ schreibt etwas in die Datenbank.</p>
+<h2 id="so-geht-es">So geht es</h2>
+<ol>
+<li>Den Export aus Florix als Datei auf das Gerät holen:<ul>
+<li>für den <strong>Atemschutz</strong> den Export „Tauglichkeiten Atemschutz“,</li>
+<li>für die <strong>Kleidung</strong> den Export „persönliche Ausrüstung“.</li>
+</ul>
+</li>
+<li>Im Modul auf <strong>Florix-Import</strong> tippen und die Datei wählen. Die Datei wird im Browser gelesen. Geburtsdaten verlassen das Gerät nicht.</li>
+<li>Kennt die App einen Namen oder eine Bezeichnung noch nicht, fragt sie zuerst danach (siehe unten) und geht mit <strong>Weiter</strong> zur Liste.</li>
+<li>Die <strong>Änderungsliste</strong> lesen und mit <strong>Änderungen übernehmen</strong> buchen, oder mit dem Knopf links daneben verwerfen.</li>
+</ol>
+<p>Bis zum letzten Tipp wird nichts geschrieben, auch keine gemerkte Zuordnung.</p>
+<h2 id="offene-zuordnungen">Offene Zuordnungen</h2>
+<p><img src="bilder/florix-import-zuordnen.png" alt="Namen, die keiner Person eindeutig zugeordnet sind" loading="lazy"></p>
+<p>Steht ein Name im Export, den die App nicht eindeutig einer Person zuordnen kann, wählt ihr die Person aus der Liste oder „nicht übernehmen“. Bei der Kleidung gilt das auch für <strong>Bezeichnungen</strong>: Ihr legt fest, zu welcher Artikelart eine neue Bezeichnung gehört, oder wählt „nicht führen“. Die Wahl wird gemerkt, aber erst mit „Änderungen übernehmen“.</p>
+<h2 id="die-aenderungsliste">Die Änderungsliste</h2>
+<p>Die Liste ist nach Gruppen sortiert. Jede Gruppe zeigt in der Überschrift die Anzahl. Gruppen bis zu zehn Einträgen sind aufgeklappt, größere zugeklappt. Antippen klappt sie auf. Unveränderte Einträge stehen nur als Zahl am Ende. Die Knöpfe bleiben unten stehen, auch wenn die Liste lang ist.</p>
+<p><strong>Atemschutz</strong></p>
+<p><img src="bilder/florix-import-atemschutz.png" alt="Änderungsliste des Atemschutz-Imports" loading="lazy"></p>
+<ul>
+<li><strong>Neue Geräteträger:</strong> Diese Personen bekommen das Kennzeichen AGT.</li>
+<li><strong>Neue Florix-Daten:</strong> je Person und Nachweisart das bisherige Datum und das neue, oder „neu“.</li>
+<li><strong>Haken „In Florix eingetragen“:</strong> Nachweise, die den Haken durch den Import bekommen, weil Florix sie abdeckt.</li>
+<li><strong>Gemerkte Zuordnungen:</strong> Name aus Florix und die gewählte Person.</li>
+<li><strong>Nicht mehr im Export:</strong> nur zur Kenntnis. Diese Personen bleiben Geräteträger, es ändert sich nichts.</li>
+</ul>
+<p><strong>Kleidung</strong></p>
+<p><img src="bilder/florix-import-kleidung.png" alt="Änderungsliste des Kleidungs-Imports" loading="lazy"></p>
+<p>Ein Teil erkennt die App immer an seinem <strong>Barcode</strong> (der Inventarnummer). Steht ein Barcode, den die App noch nicht kennt, im Export, ist das ein neues Teil, auch wenn Florix es unter derselben Identifikation führt wie ein altes. Steht ein Barcode doppelt im Export, lehnt die App die Datei ab.</p>
+<ul>
+<li><strong>Neu:</strong> Barcode, Bezeichnung, Größe und wem das Teil ausgegeben ist.</li>
+<li><strong>Geändert:</strong> je geändertem Feld der alte und der neue Wert, etwa Größe, Standort oder „Ausgegeben an“.</li>
+<li><strong>Bisher nur in der App, jetzt aus Florix:</strong> Teile, die ihr selbst erfasst hattet und die nun in Florix stehen. Florix gewinnt.</li>
+<li><strong>Verschwindet aus den Listen:</strong> Teile, die nicht mehr im Export stehen. Ihre Reinigungen bleiben gespeichert.</li>
+<li><strong>Florix-Identifikation wechselt das Teil:</strong> Florix führt ein Teil unter einer neuen Inventarnummer. Die Identifikation geht vom alten auf das neue Teil über, das alte verschwindet aus den Listen.</li>
+<li><strong>Gemerkte Zuordnungen:</strong> neue Zuordnungen von Bezeichnungen und Namen.</li>
+</ul>
+<p>Teile, die keine Schutzkleidung sind, führt die App nicht. Sie stehen nur als Zahl in der Liste.</p>
+<h2 id="keine-aenderungen">Keine Änderungen</h2>
+<p>Bringt der Export nichts Neues, steht dort „Der Export bringt keine Änderungen.“ Der Knopf heißt dann <strong>Stand übernehmen</strong>. Er vermerkt nur Datum und Stichtag des Imports, damit die Statuszeile des Moduls stimmt.</p>
+<h2 id="wenn-sich-zwischendurch-etwas-aendert">Wenn sich zwischendurch etwas ändert</h2>
+<p>Ändert jemand anderes die Daten, während ihr die Liste anseht, bucht die App nicht stillschweigend einen anderen Stand. Sie meldet „Der Stand hat sich geändert“ und lädt die Liste neu. Prüft sie noch einmal und übernehmt dann.</p>
+<blockquote>
+<p><strong>Hinweis:</strong> Der Import ändert nur die Daten in dieser App. In Florix selbst wird nichts verändert.</p>
+</blockquote>
+
+  </main>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="auto">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#171412" />
+  <script src="/theme-frueh.js"></script>
+  <link rel="stylesheet" href="/einsatztafel.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/hilfe/hilfe.css" />
+  <title>Auswertung · Hilfe Anwesenheit</title>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <a class="icon-btn" href="/hilfe/" aria-label="Zurück zur Übersicht" title="Zurück zur Übersicht">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+      </a>
+      <span class="plate-mark" aria-hidden="true">AW</span>
+      <h1>Hilfe</h1>
+    </div>
+  </header>
+  <main class="hilfe">
+<h1 id="auswertung">Auswertung</h1>
+<p>Die Auswertung zeigt, wer wie oft und wie lange teilgenommen hat. Sie ist für <strong>Admin</strong> und <strong>Abteilungsadmin</strong> im Menü unter „Auswertung“ zu finden. Abteilungsadmins sehen nur die eigenen Abteilungen.</p>
+<h2 id="zeitraum-und-auswahl">Zeitraum und Auswahl</h2>
+<p>Oben wählt ihr <strong>Abteilung</strong>, <strong>Jahr</strong>, <strong>Monat</strong> und optional eine <strong>Person</strong>. Ohne Monat gilt das ganze Jahr.</p>
+<p><img src="bilder/auswertung.png" alt="Auswertung mit Auswahl und Kennzahlen" loading="lazy"></p>
+<h2 id="kennzahlen">Kennzahlen</h2>
+<p>Über der Tabelle stehen die Durchschnitte und Zählwerte, zum Beispiel:</p>
+<ul>
+<li>Teilnehmer je Übung (Durchschnitt), wenn die Abteilung mehrere Rollen hat getrennt nach Rolle</li>
+<li>Übungen und, falls die Abteilung am Einsatzdienst teilnimmt, Einsätze im Zeitraum</li>
+<li>Monate verstrichen, aktive Personen und das Stundensoll</li>
+</ul>
+<p>Personen, die nicht zur Abteilung gehören (Gäste), zählen in keiner Kennzahl mit.</p>
+<h2 id="tabelle">Tabelle</h2>
+<p>Jede Zeile ist eine Person mit den Stunden für <strong>Übung</strong>, <strong>Sonstiges</strong> (Sitzungen, Versammlungen) und, wo es sie gibt, <strong>Einsatz</strong> sowie <strong>Gesamt</strong>.</p>
+<ul>
+<li>Die Farbe in der Spalte „Übung“ zeigt den Stand gegenüber dem Stundensoll:<ul>
+<li><strong>Grün:</strong> Soll erreicht.</li>
+<li><strong>Blau (auf Kurs):</strong> Hochgerechnet auf das Jahr wird das Soll erreicht. Die Hochrechnung ist Stunden geteilt durch die verstrichenen Monate mal 12.</li>
+<li><strong>Rot:</strong> Darunter.</li>
+</ul>
+</li>
+<li>Hat die Abteilung kein Stundensoll, gibt es keine Farben. Das ist so gewollt.</li>
+<li>Bei Auswahl eines Monats gibt es ebenfalls keine Farben, denn aus einem Monat lässt sich das Jahr nicht belastbar hochrechnen.</li>
+<li>Einträge ohne Zuordnung stehen als „nicht zuordenbar“ da. Meist ist das eine alte Schreibweise. Über „Personen verwalten“ lässt sie sich ergänzen oder korrigieren.</li>
+<li>Ausgetretene Personen bleiben für vergangene Jahre in der Tabelle, mit dem Zusatz „(ausgetreten)“.</li>
+</ul>
+<p><img src="bilder/auswertung-tabelle.png" alt="Tabelle mit den Stunden je Person und der Legende der Farben" loading="lazy"></p>
+<h2 id="einzelauswertung">Einzelauswertung</h2>
+<p>Auf den <strong>Namen</strong> einer Person tippen öffnet ihre Einzelauswertung: alle Termine und Einsätze des Jahres und den Verlauf über die Monate. Mit dem PDF-Knopf dort entsteht eine Berichtsmappe zum Weitergeben.</p>
+<h2 id="excel-export">Excel-Export</h2>
+<p>Der Knopf „Excel-Export“ unter der Tabelle speichert die Auswertung als Datei. Auf dem iPhone und iPad aus der Startbildschirm-App öffnet sich dafür das Teilen-Menü.</p>
+
+  </main>
+</body>
+</html>

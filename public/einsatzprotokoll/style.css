@@ -1,0 +1,1049 @@
+/* ══ Einsatzprotokoll: App-Regeln ══════════════════════════════════
+   Aufbauend auf dem Design-System "Einsatztafel" (einsatztafel.css, vorher
+   geladen; Quelle: Fragenkatalog-Repo, lokal in design-system/).
+   Regeln:
+   - Keine festen Farbwerte, nur Tokens (Ausnahme: Druckansicht, immer hell).
+   - Größen in rem: die Basis wächst bei 700/960/1280 px (18/19/20 px).
+   - Bevorzugt iPad. Ab 960 px (iPad quer) Lage links haftend, Fahrzeuge
+     mit Besatzung rechts.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --stripe: #c6ff00;   /* Fluor-Lime der Warnstreifen, in beiden Sätzen gleich */
+  --header-h: calc(73px + env(safe-area-inset-top, 0px));
+  --footer-h: calc(80px + env(safe-area-inset-bottom, 0px));
+}
+:root[data-theme="light"] { --stripe: #c6ff00; }
+@media (prefers-color-scheme: light) {
+  :root[data-theme="auto"] { --stripe: #c6ff00; }
+}
+
+body {
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+.hidden { display: none !important; }
+
+
+/* Lange Wörter dürfen das Layout nie sprengen */
+.h-title, .u-name, .u-role, .fz-name {
+  hyphens: auto;
+  overflow-wrap: anywhere;
+}
+
+main {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--gap) var(--gap) calc(var(--footer-h) + 16px);
+}
+
+/* ── Kopfzeile ────────────────────────────────────────────────── */
+.app-header { z-index: 50; }
+.header-inner {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1120px;
+  margin: 0 auto;
+  min-width: 0;
+}
+.app-header h1 {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Geräte-Anmeldung: auf LF10/GW dauerhaft sichtbar, unter welcher Kennung
+   erfasst wird. Auf persönlichen Anmeldungen bleibt das Feld leer. */
+.device-badge { display: none; }
+body.is-device .device-badge {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 2px 10px;
+  border: 2px solid var(--line-2);
+  border-radius: 4px;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── Formular ─────────────────────────────────────────────────── */
+.card-form {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.row-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.row-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+/* Handy: drei Auswahlfelder sind zu schmal; zwei nebeneinander, das dritte darunter */
+@media (max-width: 559px) {
+  .row-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .row-3 > :last-child:nth-child(3) { grid-column: 1 / -1; }
+}
+.field > label, #user-dialog .field label, .sheet-section-title {
+  font-family: var(--display);
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+input[type="date"], input[type="time"], input[type="text"], input[type="password"],
+input[type="search"], input[type="number"], select, textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 16px;            /* 16 px verhindert den Zoom auf iOS */
+  padding: 12px 14px;
+  min-height: 48px;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color .15s;
+}
+@media (min-width: 700px) {
+  /* Ab 18 px Basis mitwachsen; unter 16 px fällt die Schrift ohnehin nicht. */
+  input[type="date"], input[type="time"], input[type="text"], input[type="password"],
+  input[type="search"], input[type="number"], select, textarea { font-size: 1rem; }
+}
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: .8; }
+select {
+  /* Pfeil als Maske, damit er die Textfarbe des Satzes annimmt */
+  background-image: none;
+  padding-right: 40px;
+}
+.field:has(> select), .pw-select { position: relative; }
+.field:has(> select)::after, .pw-select::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  bottom: 18px;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+textarea { resize: vertical; min-height: 48px; line-height: 1.4; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--red); }
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 2px;
+  border-color: var(--red);
+}
+input:disabled, select:disabled { opacity: .55; }
+
+/* Combobox (Eingabe mit Liste) */
+.combo { position: relative; }
+.combo input[type="text"] { padding-right: 48px; }
+.combo-toggle {
+  position: absolute;
+  right: 2px; top: 2px; bottom: 2px;
+  width: 44px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 3px;
+}
+.combo-toggle:active { background: var(--press); }
+.combo-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.combo-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: var(--card);
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  list-style: none;
+  padding: 4px 0;
+  max-height: 16rem;
+  overflow-y: auto;
+  z-index: 60;
+}
+.combo-item {
+  padding: 12px 14px;
+  min-height: 44px;
+  cursor: pointer;
+  color: var(--text);
+}
+.combo-item:active { background: var(--press); }
+
+/* ── Kleine Knöpfe der App = .btn-sm der Einsatztafel ──────────── */
+.chip {
+  background: none;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  padding: 6px 12px;
+  min-height: 40px;
+  font-family: var(--display);
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.chip:active { background: var(--card-2); }
+.chip-danger { color: var(--err-text); border-color: var(--danger-line); }
+.chip-danger:active { background: var(--tint-bad); }
+
+/* Kleine Knöpfe der App = .btn-sm der Einsatztafel */
+.chip {
+  background: none;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  padding: 6px 12px;
+  min-height: 44px;
+  font-family: var(--display);
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.chip:active { background: var(--card-2); }
+.chip:disabled { opacity: .45; cursor: default; }
+
+/* Abschnittstitel im Formular */
+.section-h {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.ep-lage > .section-h:first-child, .ep-kraefte > .section-h:first-child { margin-top: 0; }
+.muted { color: var(--muted); font-weight: 400; }
+
+/* ── Erfassung: Lage und Kräfte ───────────────────────────────── */
+.ep-form { display: flex; flex-direction: column; gap: var(--gap); }
+.ep-kraefte { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.ep-kraefte > .chip { align-self: flex-start; }
+#ffen-checklist { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 18px; }
+
+/* Abgeschlossen oder nur lesen: Felder bleiben gut lesbar */
+#form-einsatz input:disabled, #form-einsatz select:disabled, #form-einsatz textarea:disabled {
+  background: var(--card-2);
+  color: var(--text);
+  opacity: 1;
+}
+
+/* Live-Status über dem Formular (Einsatztafel .notice) */
+.live-banner {
+  margin: 0 0 var(--gap);
+  padding: 12px 14px;
+  border: 1px solid var(--line-2);
+  border-left-width: 4px;
+  border-radius: 4px;
+  background: var(--card-2);
+  font-size: .95rem;
+}
+.live-banner.open { border-color: var(--green); background: linear-gradient(var(--tint-ok), var(--tint-ok)) var(--card); }
+.live-banner.open strong { color: var(--fb-ok); }
+
+/* Fahrzeugkarte: Kopf als Auswahlzeile, eingesetzt = roter Rand */
+.fahrzeuge-list { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.fahrzeug-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color .12s;
+}
+.fahrzeug-card:has(.fahrzeug-head input:checked) { border-color: var(--sel-line); }
+.fahrzeug-head .tag-check-row { min-height: 56px; padding: 6px 14px; }
+.fahrzeug-head strong {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.fahrzeug-body { padding: 4px 14px 14px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
+.fahrzeug-body > .row-2 { margin-top: 10px; }
+.subsection-title {
+  font-family: var(--display);
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+/* Positionskacheln: Kürzel als Kachel, Name daneben */
+.besatzung-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
+  gap: 8px 14px;
+}
+.besatzung-row { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); gap: 8px; align-items: stretch; }
+.pos-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  background: var(--card-2);
+  border: 2px solid var(--line-2);
+  border-radius: 4px;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.besatzung-row:has(.personenwahl.belegt) .pos-label { border-color: var(--sel-line); background: var(--sel-bg); }
+/* Personenwahl: Auswahlliste, bei „Andere …“ darunter das Textfeld */
+.personenwahl { display: grid; gap: 8px; min-width: 0; align-content: start; }
+.personenwahl select { text-overflow: ellipsis; }
+
+/* Atemschutz und Kennzeichen: Name | Minuten | Entfernen */
+.pa-list, .ver-list { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.pa-row { display: grid; grid-template-columns: minmax(0, 1fr) 5.5rem 44px; gap: 8px; align-items: center; }
+.ver-list .pa-row { grid-template-columns: minmax(0, 1fr) 44px; }
+/* Hinweis aus dem Modul Atemschutz unter dem PA-Träger; blockiert nichts */
+.pa-hinweis {
+  grid-column: 1 / -1;
+  margin-top: -2px;
+  padding: 4px 10px;
+  border-left: 3px solid var(--line-2);
+  border-radius: 2px;
+  font-size: .88rem;
+}
+.pa-hinweis.warn { border-left-color: var(--orange); background: var(--warn-tint); }
+.pa-hinweis.warn::before { content: '!\00a0'; font-weight: 700; color: var(--orange); }
+.pa-hinweis.info { color: var(--muted); }
+.ver-list .pa-row > span { display: none; }
+.icon-btn.icon-danger { color: var(--err-text); border-color: var(--danger-line); }
+.icon-btn.icon-danger:active { background: var(--tint-bad); }
+.icon-btn:disabled { opacity: .45; cursor: default; }
+
+/* ── Untere Aktionsleiste ─────────────────────────────────────── */
+.action-bar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  padding: 12px var(--gap) calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+}
+.action-row {
+  display: flex;
+  gap: 10px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.action-row .btn-primary { flex: 1; }
+.action-row .btn-secondary { flex: 0 0 auto; min-width: 56px; }
+/* Detailansicht: Zurück und E-Mail als Symbol, Löschen füllt den Rest */
+#action-detail .btn-danger { flex: 1 1 auto; }
+/* Symbolknöpfe in der Leiste: volle Knopfhöhe, quadratisch genug für den Daumen */
+.btn-icon { padding-left: 0; padding-right: 0; min-width: 64px; }
+.btn-icon svg, .history-item .h-edit svg, .icon-btn svg {
+  width: 22px; height: 22px; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+/* Löschen: umrandeter Knopf in Fehlerfarbe (Einsatztafel .btn-danger) */
+.btn-danger {
+  display: flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: 2px solid var(--danger-line);
+  border-radius: 4px;
+  padding: 12px 20px;
+  min-height: 52px;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.dialog-actions .btn-primary, .dialog-actions .btn-secondary, .dialog-actions .btn-danger { flex: 1; }
+
+/* Erfassung: ohne Speichern (Live) füllt Abschließen den Platz */
+#action-edit .btn-danger, #action-edit #btn-abschliessen { flex: 1 1 auto; }
+
+/* ── Verlauf ──────────────────────────────────────────────────── */
+.history-list, .users-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+.history-item {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+.history-item .h-main { flex: 1; min-width: 0; padding: 14px 16px; cursor: pointer; }
+.history-item .h-main:active { background: var(--press); }
+.history-item .h-edit {
+  flex: 0 0 auto;
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--display);
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 0 18px;
+  min-width: 60px;
+  cursor: pointer;
+}
+.history-item .h-edit:active { background: var(--press); }
+.history-item .h-date { font-size: .85rem; color: var(--muted); margin-bottom: 2px; font-variant-numeric: tabular-nums; }
+.history-item .h-title {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 8px;
+}
+.history-item .h-meta {
+  display: flex;
+  gap: 6px 12px;
+  font-size: .85rem;
+  color: var(--muted);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.history-item .h-del { color: var(--err-text); }
+.history-item .h-del:active { background: var(--tint-bad); }
+/* Status: Farbe UND Wort */
+.status-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 8px;
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  font-family: var(--display);
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+.status-badge.open { border-color: var(--green); background: var(--tint-ok); color: var(--fb-ok); }
+.status-badge.closed { background: var(--card-2); color: var(--muted); }
+/* Nachgetragen: Herkunftshinweis, keine Warnung */
+.status-badge.migriert { background: transparent; color: var(--muted); font-weight: 600; }
+
+.empty { text-align: center; color: var(--muted); margin-top: 40px; }
+.empty-small { color: var(--muted); font-size: .9rem; }
+
+/* ── Meldung (Toast) ──────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--footer-h) + 12px);
+  transform: translateX(-50%);
+  z-index: 300;
+  max-width: min(92vw, 28rem);
+  padding: 12px 16px;
+  border-radius: 4px;
+  border: 1px solid var(--line-2);
+  background: var(--card);
+  color: var(--text);
+  font-weight: 600;
+  text-align: center;
+}
+/* Tints sind durchscheinend; über dem Inhalt brauchen sie eine deckende Karte */
+.toast.error   { border-color: var(--red);   color: var(--fb-bad); background: linear-gradient(var(--tint-bad), var(--tint-bad)) var(--card); }
+.toast.success { border-color: var(--green); color: var(--fb-ok);  background: linear-gradient(var(--tint-ok), var(--tint-ok)) var(--card); }
+.toast.error::before   { content: '\2717\00a0'; }
+.toast.success::before { content: '\2713\00a0'; }
+
+/* ── Dialoge ──────────────────────────────────────────────────── */
+.dialog {
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--text);
+  padding: 20px 18px;
+  width: min(92vw, 24rem);
+  max-height: 90vh;
+  overflow-y: auto;
+  margin: auto;
+}
+.dialog::backdrop { background: rgba(0, 0, 0, .55); }
+.dialog form { display: flex; flex-direction: column; gap: 12px; }
+.dialog h3 {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.dialog p { font-size: .95rem; color: var(--muted); }
+.dialog-actions { display: flex; gap: 10px; margin-top: 4px; }
+
+.hint {
+  padding: 10px 12px;
+  font-size: .88rem;
+  color: var(--text);
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.login-error {
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--red);
+  background: var(--tint-bad);
+  color: var(--fb-bad);
+  font-weight: 600;
+  font-size: .95rem;
+}
+
+#user-dialog { width: min(92vw, 28rem); }
+
+/* Ankreuzfelder außerhalb der Teilnehmerliste */
+.check-row, .tag-check-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.check-row input[type="checkbox"], .tag-check-row input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  min-height: 0;
+  padding: 0;
+  border: 2px solid var(--line-2);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  flex: 0 0 auto;
+  margin: 0;
+}
+.check-row input[type="checkbox"]:checked, .tag-check-row input[type="checkbox"]:checked {
+  background: var(--btn);
+  border-color: var(--btn);
+}
+.check-row input[type="checkbox"]:checked::after, .tag-check-row input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 6px; top: 2px;
+  width: 6px; height: 11px;
+  border: solid #fff;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+}
+.tag-checklist { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+
+
+/* ── Anmeldung ────────────────────────────────────────────────── */
+.login-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 200;
+  overflow-y: auto;
+}
+.login-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--red);
+  border-radius: var(--radius);
+  padding: 28px 22px;
+  width: 100%;
+  max-width: 24rem;
+}
+.login-card h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+.login-card form { display: flex; flex-direction: column; gap: 14px; }
+.login-card .btn-primary { margin-top: 6px; width: 100%; }
+.modul-aus-text { text-align: center; color: var(--muted); margin-bottom: 18px; }
+a.btn-primary { text-decoration: none; }
+
+/* Warnstreifen Fluor-Lime/Rot wie die Fahrzeugmarkierung: unter der Kopfzeile
+   und über der Anmeldekarte. Harte Kanten, kein Farbverlauf. */
+.app-header {
+  border-bottom: 0;
+  background-image: repeating-linear-gradient(-45deg, var(--red) 0 7px, var(--stripe) 7px 14px);
+  background-size: 100% 5px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  padding-bottom: 17px;
+}
+.login-card {
+  border-top: 1px solid var(--line);
+  background-image: repeating-linear-gradient(-45deg, var(--red) 0 7px, var(--stripe) 7px 14px);
+  background-size: 100% 6px;
+  background-repeat: no-repeat;
+  background-position: left top;
+  padding-top: 34px;
+}
+
+/* ── Menü-Blatt ───────────────────────────────────────────────── */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .55);
+  z-index: 150;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.sheet {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--line-2);
+  border-bottom: 0;
+  width: 100%;
+  max-width: 30rem;
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 8px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+  animation: slide-up .2s ease-out;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+@keyframes slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.sheet-user {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: .9rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.sheet-user strong { color: var(--text); }
+.role-badge {
+  background: var(--btn);
+  color: #fff;
+  font-family: var(--display);
+  font-size: .8rem;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.sheet-item {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  font: inherit;
+  font-size: 1.05rem;
+  padding: 0 20px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--text);
+  cursor: pointer;
+}
+.sheet-item:active { background: var(--press); }
+.sheet-icon {
+  width: 22px; height: 22px; flex: 0 0 auto;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  color: var(--muted);
+}
+.sheet-theme { margin: 8px 20px 0; padding-bottom: 8px; }
+.sheet-logout { border-top: 1px solid var(--line); margin-top: 8px; color: var(--err-text); }
+.sheet-logout .sheet-icon { color: var(--err-text); }
+
+/* ── Benutzer, Stammdaten ─────────────────────────────────────── */
+.user-item {
+  flex-wrap: wrap;            /* Knöpfe rutschen auf dem Handy unter den Namen */
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.u-info { min-width: min(9rem, 100%); flex: 1 1 9rem; }
+.u-name { font-weight: 600; }
+.u-role { font-size: .85rem; color: var(--muted); margin-top: 2px; }
+.u-actions { display: flex; gap: 6px; justify-content: flex-end; margin-left: auto; }
+/* Löschen als Symbol: Fehlerfarbe wie .chip-danger */
+.icon-btn.icon-danger { color: var(--err-text); border-color: var(--danger-line); }
+.icon-btn.icon-danger:active { background: var(--tint-bad); }
+
+/* ── Benutzer, Stammdaten ─────────────────────────────────────── */
+.user-item {
+  flex-wrap: wrap;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.u-info { min-width: min(9rem, 100%); flex: 1 1 9rem; }
+.u-name { font-weight: 600; }
+.u-role { font-size: .85rem; color: var(--muted); margin-top: 2px; }
+.u-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto; }
+#view-fahrzeuge > .btn-primary, #view-ffen > .btn-primary, #view-users > .btn-primary,
+#view-webhooks > .btn-primary, #view-geraete > .btn-primary { width: auto; margin: 12px 0 14px !important; }
+#view-webhooks > .hint, #view-geraete > .hint { margin-bottom: 4px; }
+.hint code { font-size: .85em; }
+
+/* Einrichtungs-Dialog für Geräte. Der QR-Code braucht hellen Grund zum Scannen. */
+.enroll-qr {
+  display: flex;
+  justify-content: center;
+  min-height: 220px;
+  margin: 14px 0;
+  padding: 12px;
+  background: #fff;
+  border-radius: 4px;
+}
+.enroll-qr img, .enroll-qr canvas { display: block; }
+.enroll-link { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .8rem !important; }
+#enroll-dialog { display: none; }
+#enroll-dialog[open] { display: flex; flex-direction: column; gap: 10px; }
+
+/* ── Sichtbarkeit nach Rolle ──────────────────────────────────── */
+body:not(.is-admin) .admin-only { display: none !important; }
+/* Export + Drucken nur für Admin + Leser (alle, die alle Einsätze sehen) */
+body:not(.can-see-all) .seeall-only { display: none !important; }
+
+/* ── Hover nur mit Maus ───────────────────────────────────────── */
+@media (hover: hover) {
+  .chip:hover, .combo-toggle:hover { border-color: var(--text); }
+  .history-item .h-main:hover, .history-item .h-edit:hover,
+  .sheet-item:hover, .combo-item:hover { background: var(--press); }
+  .history-item .h-del:hover { background: var(--tint-bad); }
+  .btn-danger:hover { background: var(--tint-bad); }
+  .fahrzeug-card:hover { border-color: var(--line-2); }
+}
+
+/* ── Verlauf: Monate und Kalenderblatt ────────────────────────── */
+/* Monatsüberschrift über die ganze Breite */
+.h-monat {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 4px 2px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.h-monat:first-child { margin-top: 0; }
+.h-monat span { font-size: .85rem; font-weight: 600; color: var(--muted); }
+/* Kalenderblatt links im Eintrag */
+.h-kachel {
+  flex: 0 0 auto;
+  width: 3.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-2);
+  border-right: 1px solid var(--line);
+  font-family: var(--display);
+}
+.h-kachel .k-tag { font-size: 1.75rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.h-kachel .k-wt { font-size: .8rem; font-weight: 600; letter-spacing: .1em; color: var(--muted); margin-top: 2px; }
+
+/* ── Speicherstatus im Live-Hinweis ───────────────────────────── */
+.live-banner.warn { border-color: var(--orange); background: linear-gradient(var(--warn-tint), var(--warn-tint)) var(--card); }
+.live-banner.warn strong { color: var(--orange); }
+.live-punkt {
+  display: inline-block;
+  width: 10px; height: 10px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  vertical-align: 0;
+}
+
+/* ── Stärke: eine Kachel je Fahrzeug, dazu die Summe ───────────── */
+.staerke-leiste { display: flex; flex-wrap: wrap; gap: 8px; }
+.staerke {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 8.5rem;
+  min-height: 56px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--card);
+  color: var(--text);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.staerke:active { background: var(--press); }
+.staerke-summe { background: var(--card-2); border-color: var(--line-2); cursor: default; }
+.staerke .s-k {
+  font-family: var(--display);
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.staerke .s-v {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.fahrzeug-head { display: flex; align-items: center; gap: 8px; padding-right: 14px; }
+.fahrzeug-head .tag-check-row { flex: 1; }
+.fz-besetzt {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.fahrzeug-card { scroll-margin-top: calc(var(--header-h) + var(--gap)); }
+
+/* Rückfrage-Dialog (statt confirm/alert) */
+.frage-dialog { width: min(92vw, 26rem); }
+.frage-text { display: flex; flex-direction: column; gap: 8px; }
+.frage-text:empty { display: none; }
+.frage-text p { white-space: pre-line; }
+
+/* Meldung mit "Rückgängig" und ablaufendem Balken */
+.toast.toast-undo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(92vw, 28rem);
+  max-width: none;
+  padding: 6px 6px 6px 16px;
+  text-align: left;
+  overflow: hidden;
+}
+.toast-undo > span { flex: 1; }
+.toast-aktion {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  color: var(--orange);
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.toast-lauf {
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--orange);
+  transform-origin: left;
+  animation: toast-lauf linear forwards;
+}
+@keyframes toast-lauf { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { .toast-lauf { animation: none; } }
+
+/* ── Seitenkopf mit Kennzahl ──────────────────────────────────── */
+.seitenkopf {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 6px 0 14px;
+}
+.sk-titel {
+  font-family: var(--display);
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.sk-zahl {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+/* Kopfzeilen-Titel nur, wenn der große Kopf weggescrollt ist */
+body.seitenkopf-sichtbar .app-header h1 { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .app-header h1 { transition: opacity .15s; }
+}
+
+/* ── Leerzustand ──────────────────────────────────────────────── */
+.leer {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 28px auto;
+  max-width: 22rem;
+  padding: 24px 18px;
+  border: 1px dashed var(--line-2);
+  border-radius: var(--radius);
+  text-align: center;
+}
+.leer-icon {
+  width: 44px; height: 44px;
+  fill: none; stroke: var(--muted); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+}
+.leer-titel {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.leer-text { color: var(--muted); font-size: .95rem; }
+.leer-aktion { margin-top: 6px; }
+.empty:has(.leer) { margin: 0; text-align: left; color: inherit; }
+
+/* ── Bewegung ─────────────────────────────────────────────────────
+   Kurz (unter 200 ms) und nur dort, wo sie etwas anzeigt: eine Ansicht
+   kommt, ein Haken sitzt, eine Meldung erscheint. Wer am Gerät
+   "Bewegung reduzieren" eingestellt hat, bekommt nichts davon. */
+@media (prefers-reduced-motion: no-preference) {
+  .view:not(.hidden) { animation: ansicht-ein .18s ease-out; }
+  @keyframes ansicht-ein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .toast:not(.hidden) { animation: meldung-ein .18s ease-out; }
+  @keyframes meldung-ein { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+  dialog[open] { animation: dialog-ein .16s ease-out; }
+  dialog[open]::backdrop { animation: abdunkeln .16s ease-out; }
+  @keyframes dialog-ein { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+  @keyframes abdunkeln { from { opacity: 0; } to { opacity: 1; } }
+
+  .tag-check-row input[type="checkbox"]:checked::after,
+  .check-row input[type="checkbox"]:checked::after { animation: haken-sitzt .16s ease-out; }
+  @keyframes haken-sitzt { from { transform: rotate(45deg) scale(.3); opacity: 0; } to { transform: rotate(45deg) scale(1); opacity: 1; } }
+
+  .fahrzeug-body { animation: aufklappen .18s ease-out; }
+  @keyframes aufklappen { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .fahrzeug-card { transition: border-color .15s; }
+  /* Live-Punkt atmet langsam: zeigt, dass die Verbindung steht */
+  .live-punkt { animation: atmen 2.4s ease-in-out infinite; }
+  @keyframes atmen { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+  .staerke .s-v.tick { animation: zaehler .22s ease-out; }
+  @keyframes zaehler { 0% { color: var(--text); } 40% { transform: translateY(-2px); } 100% { transform: none; } }
+}
+
+/* ══ Responsive ═══════════════════════════════════════════════════ */
+
+/* Handy quer: wenig Höhe, deshalb haftet nichts */
+@media (max-height: 480px) and (orientation: landscape) {
+  .app-header { position: static; }
+  .action-bar { position: static; padding-bottom: 12px; }
+  main { padding-bottom: var(--gap); }
+  .toast { bottom: 12px; }
+}
+
+/* iPad hochkant: Lage paarweise, Listen zweispaltig */
+@media (min-width: 700px) {
+  main { max-width: 780px; }
+  .card-form { padding: 24px; }
+  .ep-lage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px 18px;
+    align-items: start;
+  }
+  .ep-lage > * { grid-column: 1 / -1; }
+  .ep-lage > .field:has(#alarmierte-einheit), .ep-lage > .field:has(#einsatzort),
+  .ep-lage > .field:has(#einsatzgrund), .ep-lage > .field:has(#einsatzleiter) { grid-column: auto; }
+  #ffen-checklist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pa-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; }
+  .history-list, .users-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sheet-overlay { align-items: center; }
+  .sheet { border-radius: var(--radius); border-bottom: 1px solid var(--line-2); padding-bottom: 12px; }
+}
+
+/* iPad quer: Lage links (haftet, scrollt für sich), Kräfte rechts */
+@media (min-width: 960px) {
+  main { max-width: 1120px; }
+  .ep-form {
+    display: grid;
+    grid-template-columns: minmax(19rem, 24rem) minmax(0, 1fr);
+    column-gap: 24px;
+    align-items: start;
+  }
+  .ep-lage {
+    display: flex;
+    align-items: stretch;   /* aus der 700-px-Regel kommt start: Felder wären zu schmal */
+    position: sticky;
+    top: calc(var(--header-h) + var(--gap));
+    max-height: calc(100vh - var(--header-h) - var(--footer-h) - 2 * var(--gap));
+    overflow-y: auto;
+  }
+  #ffen-checklist { grid-template-columns: minmax(0, 1fr); }
+  .pa-list { grid-template-columns: minmax(0, 1fr); }
+  .besatzung-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .history-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1280px) {
+  .pa-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Leiste ausblenden, wenn die Ansicht keine Aktionen hat (Verwaltung) */
+.action-bar:not(:has(.action-row:not(.hidden))) { display: none; }

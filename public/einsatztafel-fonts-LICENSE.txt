@@ -1,0 +1,4 @@
+Barlow and Barlow Condensed (c) The Barlow Project Authors (https://github.com/jpt/barlow)
+Licensed under the SIL Open Font License, Version 1.1 (https://openfontlicense.org).
+The files in this folder are the Latin subsets served by Google Fonts and are embedded
+into dist/index.html by scripts/build_app.py so the app stays a single offline file.

@@ -1,0 +1,22 @@
+{
+  "name": "anwesenheit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Anwesenheit Ausbildungsabend — mobile Web-App auf Cloudflare Pages + D1",
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "d1:create": "wrangler d1 create anwesenheit",
+    "d1:schema:local": "wrangler d1 execute anwesenheit --local --file=./schema.sql",
+    "d1:schema:remote": "wrangler d1 execute anwesenheit --remote --file=./schema.sql",
+    "deploy": "wrangler pages deploy public",
+    "test": "npm run test:schnell && npm run test:api",
+    "test:schnell": "node --test tests/inventar.test.mjs tests/unit/",
+    "test:api": "node --test --test-concurrency=3 tests/api/",
+    "test:rechte-erfassen": "node tests/helfer/rechte-erfassen.mjs",
+    "test:ausnahmen-kuerzen": "node tests/helfer/ausnahmen-kuerzen.mjs"
+  },
+  "devDependencies": {
+    "marked": "12.0.2",
+    "wrangler": "^4.0.0"
+  }
+}

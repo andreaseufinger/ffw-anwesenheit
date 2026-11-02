@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="auto">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#171412" />
+  <script src="/theme-frueh.js"></script>
+  <link rel="stylesheet" href="/einsatztafel.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/hilfe/hilfe.css" />
+  <title>Benutzer und Rollen · Hilfe Anwesenheit</title>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <a class="icon-btn" href="/hilfe/" aria-label="Zurück zur Übersicht" title="Zurück zur Übersicht">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+      </a>
+      <span class="plate-mark" aria-hidden="true">AW</span>
+      <h1>Hilfe</h1>
+    </div>
+  </header>
+  <main class="hilfe">
+<h1 id="benutzer-und-rollen">Benutzer und Rollen</h1>
+<p>Benutzer legt der <strong>Admin</strong> an. In beiden Bereichen gibt es dafür im Menü „Benutzer verwalten“ (in der Anwesenheit unter „Einstellungen“). Ein Konto gilt für beide, die Rollen werden je Bereich vergeben, und ein Konto kann Rollen in beiden haben.</p>
+<h2 id="rollen-in-der-anwesenheit">Rollen in der Anwesenheit</h2>
+<table>
+<thead>
+<tr>
+<th>Rolle</th>
+<th>Darf</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Erfasser</strong></td>
+<td>Termine anlegen und ansehen, Anwesende ankreuzen.</td>
+</tr>
+<tr>
+<td><strong>Abteilungsadmin</strong></td>
+<td>Alles, was ein Erfasser darf, dazu für die <strong>eigenen Abteilungen</strong>: Auswertung, Personen, Themen, Florix und Löschen von Terminen.</td>
+</tr>
+<tr>
+<td><strong>Admin (übergreifend)</strong></td>
+<td>Alles in allen Abteilungen, dazu Benutzer, Tags, Abteilungen und das Änderungsprotokoll.</td>
+</tr>
+<tr>
+<td><strong>Atemschutz-Admin</strong></td>
+<td>Das Modul Atemschutz.</td>
+</tr>
+<tr>
+<td><strong>Kleidung-Admin</strong></td>
+<td>Das Modul Kleidung.</td>
+</tr>
+</tbody></table>
+<p>Bei Erfasser und Abteilungsadmin legt der Haken <strong>Abteilungen</strong> fest, wo sie wirken. Der übergreifende Admin braucht keine Auswahl.</p>
+<h2 id="rollen-im-einsatzprotokoll">Rollen im Einsatzprotokoll</h2>
+<ul>
+<li><strong>Erfasser</strong> füllt Einsatzberichte aus und sieht die eigenen sowie alle offenen.</li>
+<li><strong>Leser</strong> sieht alle Einsätze, darf aber nichts ändern. Er kann drucken und exportieren.</li>
+<li><strong>Admin</strong> sieht und ändert alles, schließt Einsätze ab und verwaltet Fahrzeuge, Nachbar-FFen, Benutzer, Geräte und Webhooks.</li>
+</ul>
+<h2 id="benutzer-anlegen">Benutzer anlegen</h2>
+<ol>
+<li>„Benutzer verwalten“ öffnen und „+ Neuer Benutzer“ antippen.</li>
+<li><strong>Benutzername</strong> und ein Startpasswort eintragen.</li>
+<li>Rollen und, falls nötig, Abteilungen anhaken. Speichern.</li>
+</ol>
+<p>Das Passwort ändert jeder selbst im Menü unter „Passwort ändern“.</p>
+<h2 id="aenderungsprotokoll">Änderungsprotokoll</h2>
+<p>Der übergreifende Admin sieht unter „Einstellungen“ → „Änderungsprotokoll“, wer wann was geändert hat, etwa Benutzer, Personen, Löschungen, Einsätze oder Geräte. Oben lässt sich nach Bereich filtern. Passwörter und geheime Adressen stehen dort nie.</p>
+
+  </main>
+</body>
+</html>
